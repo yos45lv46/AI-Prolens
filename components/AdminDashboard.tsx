@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TrashIcon, ShieldIcon, CheckIcon, DatabaseIcon, LockIcon, UserIcon, DownloadCloudIcon, UploadCloudIcon, MonitorIcon, HelpCircleIcon, MailIcon, XIcon, SmartphoneIcon, FileTextIcon } from './Icons';
 import { Registration } from '../types';
+import { isFirebaseConfigured } from '../services/firebase';
 
 // IndexedDB Helper
 const DB_NAME = 'ProLensDB';
@@ -65,9 +66,11 @@ const AdminDashboard: React.FC = () => {
   
   // Cloud Guide
   const [showCloudGuide, setShowCloudGuide] = useState(false);
+  const [cloudActive, setCloudActive] = useState(false);
 
   useEffect(() => {
     loadStats();
+    setCloudActive(isFirebaseConfigured());
     
     // Optional: If we are actually ON the production site, update the URL to match exactly (in case of sub-paths)
     // But we prioritize the hardcoded production URL if we are in dev/preview modes to avoid generating broken local links
@@ -420,31 +423,55 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-8 p-6 md:p-8 bg-slate-950 rounded-xl shadow-2xl h-full overflow-y-auto">
-      <div className="flex flex-col md:flex-row items-center justify-between border-b border-slate-800 pb-6 gap-4">
-        <div className="flex items-center gap-4">
-            <div className="bg-purple-900/30 p-3 rounded-2xl border border-purple-500/20">
-                <ShieldIcon className="w-8 h-8 text-purple-400" />
-            </div>
-            <div>
-                <h1 className="text-3xl font-bold text-white tracking-tight">לוח בקרה</h1>
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                    <p>ניהול מערכת וגיבויים</p>
-                    <span>•</span>
-                    <button onClick={() => setShowCloudGuide(true)} className="text-amber-400 hover:text-amber-300 underline font-medium">
-                        מדריך חיבור לענן (לסנכרון מלא)
-                    </button>
+      
+      {/* HEADER WITH STORAGE INDICATOR */}
+      <div className="flex flex-col gap-4 border-b border-slate-800 pb-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+                <div className="bg-purple-900/30 p-3 rounded-2xl border border-purple-500/20">
+                    <ShieldIcon className="w-8 h-8 text-purple-400" />
+                </div>
+                <div>
+                    <h1 className="text-3xl font-bold text-white tracking-tight">לוח בקרה</h1>
+                    <div className="flex items-center gap-2 text-slate-400 text-sm">
+                        <p>ניהול מערכת וגיבויים</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <button 
-            onClick={handleExportBackup}
-            disabled={isBackingUp}
-            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-900/20 transition-all flex items-center gap-2 text-sm w-full md:w-auto justify-center"
-        >
-             <DownloadCloudIcon className="w-5 h-5" />
-             <span className="hidden sm:inline">גיבוי מהיר</span>
-        </button>
+            
+            <button 
+                onClick={handleExportBackup}
+                disabled={isBackingUp}
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-900/20 transition-all flex items-center gap-2 text-sm w-full md:w-auto justify-center"
+            >
+                <DownloadCloudIcon className="w-5 h-5" />
+                <span className="hidden sm:inline">גיבוי מהיר</span>
+            </button>
+          </div>
+
+          {/* CLOUD / LOCAL STATUS BANNER */}
+          <div className={`p-4 rounded-xl flex items-center justify-between ${cloudActive ? 'bg-emerald-900/20 border border-emerald-500/30' : 'bg-amber-900/20 border border-amber-500/30'}`}>
+              <div className="flex items-center gap-3">
+                   <div className={`p-2 rounded-full ${cloudActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                       <DatabaseIcon className="w-6 h-6" />
+                   </div>
+                   <div>
+                       <h3 className={`font-bold ${cloudActive ? 'text-emerald-400' : 'text-amber-400'}`}>
+                           {cloudActive ? 'מצב מערכת: מחובר לענן (קבוע)' : 'מצב מערכת: מקומי (זמני)'}
+                       </h3>
+                       <p className="text-xs text-slate-400 mt-1">
+                           {cloudActive 
+                             ? 'מעולה! כל קובץ שתעלה יישמר ב-Firebase ויופיע מיד לכל התלמידים.' 
+                             : 'שים לב: הקבצים נשמרים רק בדפדפן שלך. כדי שכולם יראו אותם, עליך לחבר את הענן.'}
+                       </p>
+                   </div>
+              </div>
+              {!cloudActive && (
+                  <button onClick={() => setShowCloudGuide(true)} className="bg-amber-500 hover:bg-amber-400 text-black font-bold px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap">
+                      חבר לענן עכשיו
+                  </button>
+              )}
+          </div>
       </div>
 
       {/* Stats Cards - Redesigned */}

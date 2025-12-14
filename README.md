@@ -1,33 +1,52 @@
-# ProLens AI Tutor - Deployment Guide
 
-This project is a React application powered by Google Gemini API. It uses Vite as the build tool.
+# מדריך התקנה והעלאה לאוויר - ProLens AI Tutor
 
-## How to Deploy to the Web
+מזל טוב על סיום בניית האפליקציה!
+כדי שהאתר יעבוד בצורה מקצועית – כך שהקוד יישאר קבוע אך תוכל להוסיף תכנים לכל התלמידים – עליך לבצע את שני השלבים הבאים:
 
-### Option 1: Vercel (Recommended)
-1. **Push to GitHub**: Upload this project code to a GitHub repository.
-2. **Sign up for Vercel**: Go to [vercel.com](https://vercel.com) and sign in with GitHub.
-3. **Import Project**: Click "Add New Project" and select your repository.
-4. **Environment Variables**: 
-   - In the "Configure Project" screen, find the "Environment Variables" section.
-   - Add a variable named `API_KEY`.
-   - Paste your Google Gemini API Key as the value.
-5. **Deploy**: Click "Deploy". Vercel will build your site and give you a live URL.
+---
 
-### Option 2: Netlify
-1. **Push to GitHub**.
-2. **Sign up for Netlify**: Go to [netlify.com](https://netlify.com).
-3. **New Site from Git**: Choose your repository.
-4. **Build Settings**:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-5. **Environment Variables**: Click "Advanced" and add your `API_KEY`.
-6. **Deploy Site**.
+## שלב 1: העלאת האתר לרשת (Deployment)
+שלב זה יהפוך את הקוד שלך לקישור אינטרנט אמיתי שזמין לכולם.
 
-## Custom Domain
-After deploying to Vercel or Netlify, go to the project "Settings" -> "Domains" to add your own custom URL (e.g., www.your-camera-course.com).
+1. **GitHub**: וודא שהקוד הזה נמצא ב-GitHub (אם אתה משתמש ב-Google IDX או סביבת פיתוח אחרת, בצע `git push`).
+2. **הרשמה ל-Vercel**: כנס לאתר [vercel.com](https://vercel.com) והירשם (חינם) באמצעות חשבון ה-GitHub שלך.
+3. **יצירת פרויקט**:
+   - לחץ על **"Add New Project"**.
+   - בחר את ה-Repository של `ProLens` מהרשימה.
+   - לחץ על **Deploy**.
+4. **הגדרת מפתח AI**:
+   - אחרי שהאתר עולה, לך ל-**Settings** -> **Environment Variables**.
+   - הוסף משתנה בשם `API_KEY` והדבק שם את המפתח של Gemini AI שלך.
+   - עשה Redeploy (בנייה מחדש) כדי שהמפתח ייקלט.
 
-## Important Note on Data
-This app uses **Local Storage** and **IndexedDB** to save student progress and uploaded files directly in their browser. It does not use a central backend database.
-- **Advantage**: Free to host, very fast, private.
-- **Limitation**: If a student clears their browser cache or switches devices, their progress is not synced automatically.
+כעת יש לך כתובת אינטרנט קבועה לאפליקציה!
+
+---
+
+## שלב 2: הפיכת התוכן לקבוע (חיבור Firebase)
+בשלב הזה נחבר את האתר ל"ענן" כדי שכל קובץ או תלמיד שתוסיף יישמר לנצח ויופיע אצל כולם.
+
+1. כנס ל-[Firebase Console](https://console.firebase.google.com/).
+2. צור פרויקט חדש (Create Project).
+3. **הוספת אפליקציית Web**:
+   - לחץ על אייקון ה-Web (`</>`).
+   - תן שם לאפליקציה.
+   - העתק את ה-`firebaseConfig` שמופיע לך (רשימה של מפתחות).
+4. **הדבקת הקוד**:
+   - חזור לקוד הפרויקט שלך, לקובץ `services/firebase.ts`.
+   - הדבק את המפתחות במקום המסומן.
+5. **הפעלת שירותים (בתוך Firebase Console)**:
+   - **Firestore Database**: לחץ על "Create Database", בחר שרת (אירופה או ארה"ב), ובחר במצב **Test Mode** (כדי למנוע בעיות הרשאה בהתחלה).
+   - **Storage**: לחץ "Get Started", בחר **Test Mode**.
+6. **עדכון סופי**:
+   - העלה את השינוי בקובץ `services/firebase.ts` ל-GitHub.
+   - Vercel יעדכן את האתר אוטומטית.
+
+---
+
+## זהו!
+מעכשיו:
+1. **הקוד** נמצא ב-Vercel ולא משתנה.
+2. **התוכן** (קבצים, תמונות, נרשמים) נשמר ב-Firebase.
+3. אתה יכול להיכנס לכתובת האתר כמנהל (Admin), להעלות מצגת, והיא תופיע מיד לכל התלמידים שייכנסו לאתר.

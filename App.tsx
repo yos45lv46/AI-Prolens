@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode, ErrorInfo, Component } from 'react';
+import React, { useState, useEffect, ReactNode, ErrorInfo } from 'react';
 import ChatTutor from './components/ChatTutor';
 import ExposureSimulator from './components/ExposureSimulator';
 import PhotoCritique from './components/PhotoCritique';
@@ -21,7 +21,7 @@ interface ErrorBoundaryState {
 }
 
 // Simple Error Boundary with explicit typing
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
