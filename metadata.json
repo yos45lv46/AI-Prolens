@@ -1,0 +1,7 @@
+{
+  "name": "Copy of ProLens AI Tutor",
+  "description": "A comprehensive DSLR photography tutor using Gemini to teach exposure, composition, and analyze user photos.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

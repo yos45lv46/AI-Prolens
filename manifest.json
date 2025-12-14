@@ -1,0 +1,16 @@
+
+{
+  "name": "ProLens AI Tutor",
+  "short_name": "ProLens",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3687/3687412.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
